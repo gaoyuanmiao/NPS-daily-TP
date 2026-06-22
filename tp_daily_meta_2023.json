@@ -1,0 +1,23 @@
+{
+  "year_total": 28324.975820689648,
+  "group_ratio": {
+    "1": 0.36659927060828257,
+    "2": 0.6218400779550934,
+    "3": 0.0115606514366239
+  },
+  "n_days": 365,
+  "outlet_info": {
+    "nominal_outlet_code": "00940067",
+    "resolved_outlet_code": "00900064",
+    "nominal_rowcol": [
+      94,
+      67
+    ],
+    "resolved_rowcol": [
+      90,
+      64
+    ],
+    "resolved_flow_acc": 115.0,
+    "resolved_distance_to_nominal": 7
+  }
+}

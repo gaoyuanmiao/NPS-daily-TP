@@ -1,0 +1,3 @@
+Positive cells used: 785
+Annual contribution sum: 27.177909
+Top 10% contribution share: 0.3093

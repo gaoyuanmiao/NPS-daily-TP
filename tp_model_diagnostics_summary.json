@@ -1,0 +1,102 @@
+{
+  "uncertainty": {
+    "ensemble_size": 19,
+    "mean_band_width": 0.01248113252222538,
+    "coverage_90": 0.36712328767123287
+  },
+  "stability": [
+    {
+      "perturbation": 0.0,
+      "nse_mean": 0.6240890861421375,
+      "nse_std": 0.0,
+      "nse_min": 0.6240890861421375,
+      "nse_max": 0.6240890861421375,
+      "r2_mean": 0.6301860346719349,
+      "rmse_mean": 0.017159464265073313
+    },
+    {
+      "perturbation": 0.05,
+      "nse_mean": 0.5988444891031659,
+      "nse_std": 0.014982142502722605,
+      "nse_min": 0.5684510798357125,
+      "nse_max": 0.615734521778243,
+      "r2_mean": 0.6250051791184853,
+      "rmse_mean": 0.0177232488653995
+    },
+    {
+      "perturbation": 0.1,
+      "nse_mean": 0.5765014096612472,
+      "nse_std": 0.034801556123836855,
+      "nse_min": 0.5108589396817997,
+      "nse_max": 0.6117443490934842,
+      "r2_mean": 0.6069203548359324,
+      "rmse_mean": 0.018198310212595024
+    },
+    {
+      "perturbation": 0.15,
+      "nse_mean": -0.7919038842456829,
+      "nse_std": 1.7569332180597712,
+      "nse_min": -4.637059371481758,
+      "nse_max": 0.3651592764997901,
+      "r2_mean": 0.4887649498350369,
+      "rmse_mean": 0.03422747676844399
+    }
+  ],
+  "key_parameters": [
+    {
+      "index": 12,
+      "label": "A13 HYD dissolved legacy release",
+      "nse_sensitivity": 0.0002435047790640965
+    },
+    {
+      "index": 0,
+      "label": "A01 Input TP dissolution coeff",
+      "nse_sensitivity": 0.00014464958803728223
+    },
+    {
+      "index": 8,
+      "label": "A09 BGC adsorbed current release",
+      "nse_sensitivity": 0.00012830697232857347
+    },
+    {
+      "index": 1,
+      "label": "A02 Soil dissolved leaching coeff",
+      "nse_sensitivity": 0.0001124006521422416
+    },
+    {
+      "index": 10,
+      "label": "A11 BGC adsorbed leaching coeff",
+      "nse_sensitivity": 9.32811526581645e-05
+    },
+    {
+      "index": 2,
+      "label": "A03 Groundwater dissolved leaching coeff",
+      "nse_sensitivity": 9.260638034902513e-05
+    },
+    {
+      "index": 5,
+      "label": "A06 BGC dissolved current release",
+      "nse_sensitivity": 9.029527427628636e-05
+    },
+    {
+      "index": 7,
+      "label": "A08 BGC dissolved leaching coeff",
+      "nse_sensitivity": 3.765192013815977e-05
+    },
+    {
+      "index": 9,
+      "label": "A10 BGC adsorbed legacy release",
+      "nse_sensitivity": 1.18878797366051e-05
+    },
+    {
+      "index": 6,
+      "label": "A07 BGC dissolved legacy release",
+      "nse_sensitivity": 2.6430274708503676e-06
+    }
+  ],
+  "figures": {
+    "uncertainty": "C:\\Users\\Administrator\\Desktop\\TP_daily_model_rollback_uniform_clean_20260420\\tp_uncertainty_band.png",
+    "stability": "C:\\Users\\Administrator\\Desktop\\TP_daily_model_rollback_uniform_clean_20260420\\tp_stability_boxplot.png",
+    "sensitivity": "C:\\Users\\Administrator\\Desktop\\TP_daily_model_rollback_uniform_clean_20260420\\tp_key_parameter_sensitivity.png"
+  }
+}

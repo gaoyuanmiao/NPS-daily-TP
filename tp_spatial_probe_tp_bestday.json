@@ -1,0 +1,19 @@
+{
+  "date": "2023-03-25",
+  "obs": 0.237,
+  "sim": 0.22429217398166656,
+  "outlet_info": {
+    "nominal_outlet_code": "00940067",
+    "resolved_outlet_code": "00900064",
+    "nominal_rowcol": [
+      94,
+      67
+    ],
+    "resolved_rowcol": [
+      90,
+      64
+    ],
+    "resolved_flow_acc": 115.0,
+    "resolved_distance_to_nominal": 7
+  }
+}

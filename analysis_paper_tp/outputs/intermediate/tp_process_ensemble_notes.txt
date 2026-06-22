@@ -1,0 +1,4 @@
+Process ensemble size: 100
+Calibration period: 2023-01-01 to 2023-09-12
+Validation period: 2023-09-13 to 2023-12-31
+The ensemble was represented with a process-guided statistical proxy built from the calibrated TP simulation, rainfall, runoff, event weighting, and structured residual variability.

@@ -1,0 +1,3 @@
+Ensemble file: C:\Users\Administrator\Desktop\TP_daily_model_rollback_uniform_clean_20260420\analysis_paper_tp\outputs\intermediate\tp_process_ensemble_predictions.csv
+Uncertainty intervals were derived from a process-guided TP proxy ensemble.
+A statistical proxy ensemble was used because no stored member-level TP ensemble was available.

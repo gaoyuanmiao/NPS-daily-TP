@@ -1,0 +1,10 @@
+{
+  "outlet_code": "00940067",
+  "used_proxy": true,
+  "annual_source_total": 89.53999999999948,
+  "annual_cell_contribution_total": 27.177908991999228,
+  "raw_annual_source_total": 89.53999999999948,
+  "source_conditioning_mode": "corrected_90kg_landuse_constrained",
+  "removed_source_total_before_redistribution": 0.0,
+  "redistribution_scale": 1.0
+}

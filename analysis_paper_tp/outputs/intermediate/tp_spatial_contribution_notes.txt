@@ -1,0 +1,5 @@
+The annual TP source generation map was built from the currently available TP source rasters used by the active TP workflow.
+Cropland and impervious cells retained positive local source, while forest/grass cells were assigned zero local source.
+Accumulated routing flux and cell contribution maps were represented with topology-guided spatial proxies.
+Only cells that are topologically connected to the outlet were allowed to contribute local export.
+The cell contribution map was scaled to the annual simulated outlet total.

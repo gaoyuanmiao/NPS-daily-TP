@@ -1,0 +1,51 @@
+{
+  "tag": "direct_physical_90kg_tp",
+  "source_dir": "C:\\Users\\Administrator\\Desktop\\TP_daily_model_rollback_uniform_clean_20260420\\source_corrected_90kg",
+  "annual_source_total": 89.54,
+  "annual_crop_total": 70.84,
+  "annual_impervious_total": 18.700000000000003,
+  "full_metrics": {
+    "nse": 0.75169850610321,
+    "r2": 0.7524498599601817,
+    "rmse": 0.013946040544472271,
+    "mae": 0.009736869423193474,
+    "bias": -0.00037285196846478623
+  },
+  "train_metrics": {
+    "nse": 0.7149201741895241,
+    "r2": 0.7157431307523537,
+    "rmse": 0.015215305758248865,
+    "mae": 0.01047581265428487,
+    "bias": -0.000679968547937917
+  },
+  "val_metrics": {
+    "nse": 0.7770391620167117,
+    "r2": 0.7850340320537994,
+    "rmse": 0.010425356820145181,
+    "mae": 0.008023864660208874,
+    "bias": 0.0003391001021320171
+  },
+  "best_epoch": 3200,
+  "outlet_info": {
+    "nominal_outlet_code": "00940067",
+    "resolved_outlet_code": "00940067",
+    "nominal_rowcol": [
+      94,
+      67
+    ],
+    "resolved_rowcol": [
+      94,
+      67
+    ],
+    "flowdir_strategy": "preserve_nominal_outlet_and_adjust_topology",
+    "source_dir": "C:\\Users\\Administrator\\Desktop\\TP_daily_model_rollback_uniform_clean_20260420\\source_corrected_90kg"
+  },
+  "storage_release": {
+    "k_crop": 0.06104741245508194,
+    "k_impervious": 0.07023835182189941,
+    "eff_crop": 0.28846263885498047,
+    "eff_impervious": 0.6319693922996521,
+    "memory": 0.21578121185302734
+  },
+  "annual_cell_contribution_total": 27.18643250128644
+}

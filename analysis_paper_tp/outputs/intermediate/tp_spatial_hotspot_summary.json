@@ -1,0 +1,11 @@
+{
+  "annual_source_total": 89.53999999999948,
+  "annual_cell_contribution_total": 27.177908991999228,
+  "annual_accumulated_flux_total": 1724.6187419071132,
+  "source_hotspot_threshold": 0.07844961240310021,
+  "contribution_hotspot_threshold": 3.4936022442967287,
+  "used_proxy": true,
+  "dropped_cycle_edges_for_accumulation": 0,
+  "source_conditioning_mode": "corrected_90kg_landuse_constrained",
+  "raw_annual_source_total": 89.53999999999948
+}

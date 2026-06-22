@@ -1,0 +1,38 @@
+{
+  "tag": "probe_tp",
+  "best_epoch": 10,
+  "score": -1082.576983992618,
+  "split": {
+    "total_days": 365,
+    "train_days": 292,
+    "val_days": 73
+  },
+  "train_metrics": {
+    "nse": 0.624093364051268,
+    "r2": 0.6274421348237517,
+    "rmse": 0.017395734871415793,
+    "mae": 0.010338919264404741,
+    "bias": -0.0013785012080653077
+  },
+  "val_metrics": {
+    "nse": 0.3239549526684997,
+    "r2": 0.3387519350421265,
+    "rmse": 0.01586030087014385,
+    "mae": 0.012323238468741718,
+    "bias": -0.0015320660965899898
+  },
+  "outlet_info": {
+    "nominal_outlet_code": "00940067",
+    "resolved_outlet_code": "00900064",
+    "nominal_rowcol": [
+      94,
+      67
+    ],
+    "resolved_rowcol": [
+      90,
+      64
+    ],
+    "resolved_flow_acc": 115.0,
+    "resolved_distance_to_nominal": 7
+  }
+}

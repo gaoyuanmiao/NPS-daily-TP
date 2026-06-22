@@ -1,0 +1,14 @@
+{
+  "annual_total": 89.54,
+  "crop_total": 70.84,
+  "impervious_total": 18.700000000000003,
+  "spatial_allocation_mode": "uniform_within_landuse",
+  "forest_total": 0.0,
+  "crop_cell_count": 903,
+  "impervious_cell_count": 15,
+  "annual_crop_map_sum": 70.84,
+  "annual_imp_map_sum": 18.700000000000003,
+  "annual_total_map_sum": 89.54,
+  "max_crop_cell": 0.07844961240310078,
+  "max_imp_cell": 1.2466666666666668
+}

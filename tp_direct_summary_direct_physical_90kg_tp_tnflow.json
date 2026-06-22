@@ -1,0 +1,51 @@
+{
+  "tag": "direct_physical_90kg_tp_tnflow",
+  "source_dir": "C:\\Users\\Administrator\\Desktop\\TP_daily_model_rollback_uniform_clean_20260420\\source_corrected_90kg",
+  "annual_source_total": 89.54000000000002,
+  "annual_crop_total": 70.84,
+  "annual_impervious_total": 18.700000000000006,
+  "full_metrics": {
+    "nse": 0.6940140358526843,
+    "r2": 0.6961757363704864,
+    "rmse": 0.015481463384789795,
+    "mae": 0.010319217046278795,
+    "bias": -0.0004577952366577438
+  },
+  "train_metrics": {
+    "nse": 0.6288165362180234,
+    "r2": 0.6320995411761126,
+    "rmse": 0.017361680180542224,
+    "mae": 0.011560478743677044,
+    "bias": -0.000735477761953485
+  },
+  "val_metrics": {
+    "nse": 0.8019947550091064,
+    "r2": 0.8058777710744808,
+    "rmse": 0.009824602350874501,
+    "mae": 0.007441746747764672,
+    "bias": 0.0001859233447096565
+  },
+  "best_epoch": 2200,
+  "outlet_info": {
+    "nominal_outlet_code": "00940067",
+    "resolved_outlet_code": "00900064",
+    "nominal_rowcol": [
+      94,
+      67
+    ],
+    "resolved_rowcol": [
+      90,
+      64
+    ],
+    "resolved_flow_acc": 115.0,
+    "resolved_distance_to_nominal": 7
+  },
+  "storage_release": {
+    "k_crop": 0.06349997967481613,
+    "k_impervious": 0.07528142631053925,
+    "eff_crop": 0.2843573987483978,
+    "eff_impervious": 0.7945888042449951,
+    "memory": 0.261947900056839
+  },
+  "annual_cell_contribution_total": 27.158876295303667
+}

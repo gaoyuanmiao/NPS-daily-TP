@@ -1,0 +1,2 @@
+Stability metrics were computed from the process-guided TP proxy ensemble.
+A statistical proxy ensemble was used because no stored member-level TP ensemble was available.

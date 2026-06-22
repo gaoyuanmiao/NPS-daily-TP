@@ -1,0 +1,38 @@
+{
+  "tag": "smoke_tp4",
+  "best_epoch": 1,
+  "score": -1170.1416086902987,
+  "split": {
+    "total_days": 365,
+    "train_days": 292,
+    "val_days": 73
+  },
+  "train_metrics": {
+    "nse": 0.3621193923517887,
+    "r2": 0.37209818569724495,
+    "rmse": 0.022660656277745536,
+    "mae": 0.015510233391127356,
+    "bias": 0.002473130129277706
+  },
+  "val_metrics": {
+    "nse": 0.3463545591170204,
+    "r2": 0.42988864716621106,
+    "rmse": 0.015595335498222482,
+    "mae": 0.01219496623947196,
+    "bias": 0.005370766849550482
+  },
+  "outlet_info": {
+    "nominal_outlet_code": "00940067",
+    "resolved_outlet_code": "00900064",
+    "nominal_rowcol": [
+      94,
+      67
+    ],
+    "resolved_rowcol": [
+      90,
+      64
+    ],
+    "resolved_flow_acc": 115.0,
+    "resolved_distance_to_nominal": 7
+  }
+}
