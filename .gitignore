@@ -5,3 +5,4 @@ __pycache__/
 Thumbs.db
 *.tmp
 *.log
+.tmp_mpl_config/

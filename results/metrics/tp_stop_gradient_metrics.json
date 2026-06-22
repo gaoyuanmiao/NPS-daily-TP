@@ -1,0 +1,31 @@
+{
+  "metrics": {
+    "calibration": {
+      "nse": 0.5427726468030345,
+      "r2": 0.5697262137617228,
+      "rmse": 0.019269193753172566,
+      "pbias": 2.934745589850342
+    },
+    "validation": {
+      "nse": 0.7662846386349981,
+      "r2": 0.7695981110148808,
+      "rmse": 0.010673829548146874,
+      "pbias": -2.011070842718521
+    },
+    "all": {
+      "nse": 0.6249946339656727,
+      "r2": 0.634532963696615,
+      "rmse": 0.01713878372055861,
+      "pbias": 1.6962091470455158
+    }
+  },
+  "parameters": {
+    "crop_storage_decay": 0.021492300555109978,
+    "impervious_storage_decay": 0.1265767216682434,
+    "crop_transport_efficiency": 0.6689498424530029,
+    "impervious_transport_efficiency": 0.9443194270133972,
+    "memory_coefficient": 0.2173002064228058,
+    "split_date": "2023-09-13",
+    "learn_source_weights": false
+  }
+}

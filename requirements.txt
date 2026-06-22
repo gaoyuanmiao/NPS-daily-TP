@@ -1,6 +1,7 @@
 numpy
 pandas
-scipy
 matplotlib
-openpyxl
-pymoo
+scipy
+scikit-learn
+torch
+
