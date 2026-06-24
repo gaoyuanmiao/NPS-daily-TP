@@ -11,32 +11,32 @@ from .tp_differentiable_model import DirectPhysicalTPModel
 
 
 PARAM_MAP = [
-    ("crop_release_coefficient", "gamma_crop", 1),
-    ("impervious_release_coefficient", "gamma_imp", 1),
-    ("crop_transport_efficiency", "delta_crop", 1),
-    ("impervious_transport_efficiency", "delta_imp", 1),
-    ("memory_coefficient", "mem_raw", None),
-    ("runoff_response_coefficient", "beta_crop", 1),
-    ("rainfall_response_coefficient", "beta_crop", 2),
-    ("source_allocation_coefficient", "beta_imp", 1),
-    ("seasonal_coefficient", "beta_crop", 5),
-    ("fertilization_timing_coefficient", "beta_crop", 4),
-    ("routing_attenuation_coefficient", "eff_crop_raw", None),
-    ("legacy_release_coefficient", "k_crop_raw", None),
-    ("surface_partition_coefficient", "eff_imp_raw", None),
+    ("Crop-source release coefficient", "gamma_crop", 1),
+    ("Impervious-source release coefficient", "gamma_imp", 1),
+    ("Crop-source transport efficiency", "delta_crop", 1),
+    ("Impervious-source transport efficiency", "delta_imp", 1),
+    ("Memory coefficient", "mem_raw", None),
+    ("Runoff response coefficient", "beta_crop", 1),
+    ("Rainfall response coefficient", "beta_crop", 2),
+    ("Source allocation coefficient", "beta_imp", 1),
+    ("Seasonal coefficient", "beta_crop", 5),
+    ("Fertilization timing coefficient", "beta_crop", 4),
+    ("Routing attenuation coefficient", "eff_crop_raw", None),
+    ("Legacy release coefficient", "k_crop_raw", None),
+    ("Surface partition coefficient", "eff_imp_raw", None),
 ]
 
 
 def run_sensitivity_analysis(output_csv: Path, state_dict: dict[str, torch.Tensor]) -> pd.DataFrame:
     dataset = load_tp_dataset()
-    base_model = DirectPhysicalTPModel(dataset=dataset, learn_source_weights=True)
+    base_model = DirectPhysicalTPModel(dataset=dataset)
     base_model.load_state_dict(state_dict, strict=False)
     with torch.no_grad():
         base_raw = base_model()["raw"].detach().cpu().numpy()
 
     rows = []
     for label, tensor_name, index in PARAM_MAP:
-        member = DirectPhysicalTPModel(dataset=dataset, learn_source_weights=True)
+        member = DirectPhysicalTPModel(dataset=dataset)
         member.load_state_dict(state_dict, strict=False)
         with torch.no_grad():
             param = getattr(member, tensor_name)
@@ -57,4 +57,3 @@ def run_sensitivity_analysis(output_csv: Path, state_dict: dict[str, torch.Tenso
     output_csv.parent.mkdir(parents=True, exist_ok=True)
     result.to_csv(output_csv, index=False)
     return result
-

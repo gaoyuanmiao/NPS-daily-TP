@@ -1,31 +1,31 @@
 {
   "metrics": {
     "calibration": {
-      "nse": 0.5427726468030345,
-      "r2": 0.5697262137617228,
-      "rmse": 0.019269193753172566,
-      "pbias": 2.934745589850342
+      "nse": 0.7668712314796848,
+      "r2": 0.7676032897145544,
+      "rmse": 0.013759269479373105,
+      "pbias": 0.34829617213303865
     },
     "validation": {
-      "nse": 0.7662846386349981,
-      "r2": 0.7695981110148808,
-      "rmse": 0.010673829548146874,
-      "pbias": -2.011070842718521
+      "nse": -2.4825378444398516,
+      "r2": 0.5712821174646141,
+      "rmse": 0.041202593770069615,
+      "pbias": 39.38842341303824
     },
     "all": {
-      "nse": 0.6249946339656727,
-      "r2": 0.634532963696615,
-      "rmse": 0.01713878372055861,
-      "pbias": 1.6962091470455158
+      "nse": 0.177974081211972,
+      "r2": 0.49426312477955475,
+      "rmse": 0.025374880919160972,
+      "pbias": 10.124765027950264
     }
   },
-  "parameters": {
-    "crop_storage_decay": 0.021492300555109978,
-    "impervious_storage_decay": 0.1265767216682434,
-    "crop_transport_efficiency": 0.6689498424530029,
-    "impervious_transport_efficiency": 0.9443194270133972,
-    "memory_coefficient": 0.2173002064228058,
-    "split_date": "2023-09-13",
-    "learn_source_weights": false
+  "ablation": {
+    "type": "stop_gradient_source_generation",
+    "source_generation_file": "D:\\desktop\\TP_daily_model_rollback_uniform_clean_20260420\\results\\predictions\\tp_differentiable_source_generation.csv",
+    "source_generation_trainable": false,
+    "downstream_parameters_trainable": true,
+    "validation_used_for_training": false,
+    "best_checkpoint_selected_on": "calibration_loss_only",
+    "best_calibration_loss": 0.07940030097961426
   }
 }

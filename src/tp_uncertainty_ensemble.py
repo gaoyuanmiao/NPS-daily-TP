@@ -9,14 +9,22 @@ import torch
 
 from .data_loader import load_tp_dataset
 from .metrics import metrics_by_period
-from .tp_differentiable_model import DirectPhysicalTPModel
+from .tp_differentiable_model import DEFAULT_CHECKPOINT_PATH, DirectPhysicalTPModel, load_differentiable_checkpoint
 
 
-def build_ensemble(output_csv: Path, output_metrics_json: Path, state_dict: dict[str, torch.Tensor], ensemble_size: int = 120, seed: int = 2029) -> tuple[pd.DataFrame, dict[str, dict[str, float]]]:
+def build_ensemble(
+    output_csv: Path,
+    output_metrics_json: Path,
+    state_dict: dict[str, torch.Tensor] | None = None,
+    ensemble_size: int = 120,
+    seed: int = 2029,
+) -> tuple[pd.DataFrame, dict[str, dict[str, float]]]:
     rng = np.random.default_rng(seed)
     dataset = load_tp_dataset()
     df = dataset.frame.copy()
-    base_model = DirectPhysicalTPModel(dataset=dataset, learn_source_weights=True)
+    if state_dict is None:
+        state_dict = load_differentiable_checkpoint(DEFAULT_CHECKPOINT_PATH)
+    base_model = DirectPhysicalTPModel(dataset=dataset)
     base_model.load_state_dict(state_dict, strict=False)
 
     with torch.no_grad():
@@ -26,7 +34,7 @@ def build_ensemble(output_csv: Path, output_metrics_json: Path, state_dict: dict
 
     members = []
     for _ in range(ensemble_size):
-        member = DirectPhysicalTPModel(dataset=dataset, learn_source_weights=True)
+        member = DirectPhysicalTPModel(dataset=dataset)
         perturbed = {}
         for name, tensor in state_dict.items():
             arr = tensor.detach().cpu().numpy().astype(np.float32)
@@ -64,7 +72,19 @@ def build_ensemble(output_csv: Path, output_metrics_json: Path, state_dict: dict
     output_metrics_json.parent.mkdir(parents=True, exist_ok=True)
     summary.to_csv(output_csv, index=False)
     output_metrics_json.write_text(
-        json.dumps({"metrics": metrics, "ensemble_size": ensemble_size}, ensure_ascii=False, indent=2),
+        json.dumps(
+            {
+                "metrics": metrics,
+                "ensemble_size": ensemble_size,
+                "training": {
+                    "base_model_trained_with_calibration_only": True,
+                    "validation_used_for_ensemble_member_generation": False,
+                    "residual_bootstrap_source": "calibration_only",
+                },
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
         encoding="utf-8",
     )
     return summary, metrics

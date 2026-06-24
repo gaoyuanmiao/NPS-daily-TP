@@ -38,7 +38,7 @@ def compute_metrics(observed: Iterable[float], simulated: Iterable[float]) -> Me
     corr = np.corrcoef(obs, sim)[0, 1] if obs.size > 1 else np.nan
     r2 = float(corr * corr) if np.isfinite(corr) else float("nan")
     rmse = float(np.sqrt(np.mean(diff ** 2)))
-    pbias = float(100.0 * np.sum(obs - sim) / np.sum(obs)) if abs(np.sum(obs)) > 1e-12 else float("nan")
+    pbias = float(100.0 * np.sum(sim - obs) / np.sum(obs)) if abs(np.sum(obs)) > 1e-12 else float("nan")
     return MetricSet(nse=nse, r2=r2, rmse=rmse, pbias=pbias)
 
 
@@ -49,4 +49,3 @@ def metrics_by_period(observed: np.ndarray, simulated: np.ndarray, period: np.nd
         out[label.lower()] = compute_metrics(observed[mask], simulated[mask]).to_dict()
     out["all"] = compute_metrics(observed, simulated).to_dict()
     return out
-

@@ -1,31 +1,38 @@
 {
   "metrics": {
     "calibration": {
-      "nse": 0.6804622290975357,
-      "r2": 0.691168817368431,
-      "rmse": 0.016108627628271116,
-      "pbias": 1.5224269927246705
+      "nse": 0.7154125841164707,
+      "r2": 0.7180992111309447,
+      "rmse": 0.015202159605899454,
+      "pbias": -0.27429735404655364
     },
     "validation": {
-      "nse": 0.7503335125727961,
-      "r2": 0.75482168453385,
-      "rmse": 0.011032063672699738,
-      "pbias": -0.3630720187871776
+      "nse": -1.0839808848797605,
+      "r2": 0.5688307607531611,
+      "rmse": 0.031873040876728036,
+      "pbias": 35.67543926251213
     },
     "all": {
-      "nse": 0.7217317472046809,
-      "r2": 0.7279427370672378,
-      "rmse": 0.014763627799105637,
-      "pbias": 1.0502583891242807
+      "nse": 0.4030099950636662,
+      "r2": 0.5398843998199022,
+      "rmse": 0.021624435903608213,
+      "pbias": 8.72827270003785
     }
   },
   "parameters": {
-    "crop_storage_decay": 0.021658403798937798,
-    "impervious_storage_decay": 0.10190081596374512,
-    "crop_transport_efficiency": 0.3016522526741028,
-    "impervious_transport_efficiency": 0.8772473931312561,
-    "memory_coefficient": 0.18350224196910858,
+    "crop_storage_decay": 0.02180279977619648,
+    "impervious_storage_decay": 0.0785096138715744,
+    "crop_transport_efficiency": 0.3916526734828949,
+    "impervious_transport_efficiency": 0.9170483350753784,
+    "memory_coefficient": 0.11780828982591629,
     "split_date": "2023-09-13",
-    "learn_source_weights": true
+    "best_calibration_loss": 0.09720036387443542
+  },
+  "training": {
+    "calibration_only_loss": true,
+    "validation_used_for_training": false,
+    "validation_used_for_checkpoint_selection": false,
+    "seed": 2026,
+    "epochs": 2200
   }
 }

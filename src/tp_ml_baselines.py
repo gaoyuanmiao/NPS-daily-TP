@@ -5,7 +5,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from sklearn.base import clone
 from sklearn.ensemble import ExtraTreesRegressor, GradientBoostingRegressor, RandomForestRegressor
+from sklearn.model_selection import TimeSeriesSplit
 from sklearn.neural_network import MLPRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -68,6 +70,18 @@ def candidate_models() -> dict[str, object]:
     return models
 
 
+def _cross_validation_predictions(model: object, X_train: np.ndarray, y_train: np.ndarray) -> np.ndarray:
+    n_splits = 4 if len(y_train) >= 80 else 3
+    splitter = TimeSeriesSplit(n_splits=n_splits)
+    oof = np.full(len(y_train), np.nan, dtype=float)
+    for fold_train_idx, fold_val_idx in splitter.split(X_train):
+        fold_model = clone(model)
+        fold_model.fit(X_train[fold_train_idx], y_train[fold_train_idx])
+        pred = np.asarray(fold_model.predict(X_train[fold_val_idx]), dtype=float)
+        oof[fold_val_idx] = np.clip(pred, 0.0, None)
+    return oof
+
+
 def train_ml_baselines(
     output_prediction_csv: Path,
     output_all_metrics_csv: Path,
@@ -82,16 +96,21 @@ def train_ml_baselines(
     val_mask = ~train_mask
 
     X_train, y_train = X[train_mask], y[train_mask]
-    X_all = X
     metric_rows: list[dict[str, object]] = []
     best_name = ""
     best_score = -np.inf
     best_pred: np.ndarray | None = None
     best_metrics: dict[str, dict[str, float]] | None = None
+    best_internal_metrics: dict[str, float] | None = None
 
     for name, model in candidate_models().items():
-        model.fit(X_train, y_train)
-        pred = np.asarray(model.predict(X_all), dtype=float)
+        oof = _cross_validation_predictions(model, X_train, y_train)
+        valid_oof = np.isfinite(oof)
+        internal_metrics = compute_metrics(y_train[valid_oof], oof[valid_oof]).to_dict()
+
+        final_model = clone(model)
+        final_model.fit(X_train, y_train)
+        pred = np.asarray(final_model.predict(X), dtype=float)
         pred = np.clip(pred, 0.0, None)
         metrics = metrics_by_period(y, pred, df["period"].to_numpy())
         metric_rows.append(
@@ -101,6 +120,10 @@ def train_ml_baselines(
                 "calibration_r2": metrics["calibration"]["r2"],
                 "calibration_rmse": metrics["calibration"]["rmse"],
                 "calibration_pbias": metrics["calibration"]["pbias"],
+                "internal_validation_nse": internal_metrics["nse"],
+                "internal_validation_r2": internal_metrics["r2"],
+                "internal_validation_rmse": internal_metrics["rmse"],
+                "internal_validation_pbias": internal_metrics["pbias"],
                 "validation_nse": metrics["validation"]["nse"],
                 "validation_r2": metrics["validation"]["r2"],
                 "validation_rmse": metrics["validation"]["rmse"],
@@ -112,18 +135,19 @@ def train_ml_baselines(
             }
         )
         score = (
-            3.0 * np.nan_to_num(metrics["validation"]["nse"], nan=-10.0)
-            + 1.5 * np.nan_to_num(metrics["validation"]["r2"], nan=-10.0)
+            3.0 * np.nan_to_num(internal_metrics["nse"], nan=-10.0)
+            + 1.5 * np.nan_to_num(internal_metrics["r2"], nan=-10.0)
             + 0.5 * np.nan_to_num(metrics["calibration"]["nse"], nan=-10.0)
-            - 0.2 * metrics["validation"]["rmse"]
+            - 0.2 * internal_metrics["rmse"]
         )
         if score > best_score:
             best_score = score
             best_name = name
             best_pred = pred
             best_metrics = metrics
+            best_internal_metrics = internal_metrics
 
-    if best_pred is None or best_metrics is None:
+    if best_pred is None or best_metrics is None or best_internal_metrics is None:
         raise RuntimeError("No machine-learning baseline produced predictions.")
 
     pred_df = pd.DataFrame(
@@ -139,10 +163,21 @@ def train_ml_baselines(
     output_all_metrics_csv.parent.mkdir(parents=True, exist_ok=True)
     output_best_metrics_json.parent.mkdir(parents=True, exist_ok=True)
     pred_df.to_csv(output_prediction_csv, index=False)
-    pd.DataFrame(metric_rows).sort_values(["validation_nse", "validation_r2"], ascending=[False, False]).to_csv(output_all_metrics_csv, index=False)
+    pd.DataFrame(metric_rows).sort_values(["internal_validation_nse", "internal_validation_r2"], ascending=[False, False]).to_csv(output_all_metrics_csv, index=False)
     output_best_metrics_json.write_text(
-        json.dumps({"best_model": best_name, "metrics": best_metrics}, ensure_ascii=False, indent=2),
+        json.dumps(
+            {
+                "best_model": best_name,
+                "selection": {
+                    "criterion": "calibration_only_internal_time_series_cv",
+                    "internal_validation_metrics": best_internal_metrics,
+                    "final_validation_used_for_selection": False,
+                },
+                "metrics": best_metrics,
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
         encoding="utf-8",
     )
     return pred_df, best_metrics, best_name
-

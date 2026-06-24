@@ -1,18 +1,20 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parent.parent
+os.environ.setdefault("MPLCONFIGDIR", str(ROOT / ".tmp_mpl_config"))
+
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 
 from .plotting_style import COLORS, format_date_axis, metric_box, setup_style, style_axis
-
-
-ROOT = Path(__file__).resolve().parent.parent
+from .tp_consistency_checks import run_prediction_consistency_checks
 
 
 def _read_json(path: Path) -> dict:
@@ -27,6 +29,7 @@ def _save(fig: plt.Figure, path_png: Path, path_pdf: Path) -> None:
 
 
 def make_final_figures() -> list[Path]:
+    run_prediction_consistency_checks(ROOT)
     setup_style()
     fig_dir = ROOT / "figures"
     pred_dir = ROOT / "results" / "predictions"
@@ -88,15 +91,7 @@ def make_final_figures() -> list[Path]:
         ("Non-differentiable daily model", nondiff, nondiff_metrics),
         ("Stop-gradient source-generation ablation", stopg, stopg_metrics),
     ]
-    max_xy = max(
-        float(
-            max(
-                frame["observed_tp"].max(),
-                frame["simulated_tp"].max(),
-            )
-        )
-        for _, frame, _ in model_frames
-    ) * 1.05
+    max_xy = max(float(max(frame["observed_tp"].max(), frame["simulated_tp"].max())) for _, frame, _ in model_frames) * 1.05
     fig, axes = plt.subplots(2, 2, figsize=(8.4, 7.4), sharex=True, sharey=True)
     for ax, (title, frame, metrics), label in zip(axes.flatten(), model_frames, ["(a)", "(b)", "(c)", "(d)"]):
         cal = frame["period"] == "Calibration"
@@ -114,9 +109,7 @@ def make_final_figures() -> list[Path]:
             f"Cal NSE = {metrics['calibration']['nse']:.2f}\n"
             f"Val NSE = {metrics['validation']['nse']:.2f}\n"
             f"Cal R² = {metrics['calibration']['r2']:.2f}\n"
-            f"Val R² = {metrics['validation']['r2']:.2f}\n"
-            f"RMSE = {metrics['all']['rmse']:.3f}\n"
-            f"PBIAS = {metrics['all']['pbias']:.2f}",
+            f"Val R² = {metrics['validation']['r2']:.2f}",
             transform=ax.transAxes,
             ha="left",
             va="top",

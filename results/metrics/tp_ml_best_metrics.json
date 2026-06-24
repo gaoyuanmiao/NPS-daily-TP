@@ -1,23 +1,33 @@
 {
   "best_model": "GradientBoosting",
+  "selection": {
+    "criterion": "calibration_only_internal_time_series_cv",
+    "internal_validation_metrics": {
+      "nse": 0.07193054296242163,
+      "r2": 0.1885960365654478,
+      "rmse": 0.029036506309789357,
+      "pbias": 2.0931693896008907
+    },
+    "final_validation_used_for_selection": false
+  },
   "metrics": {
     "calibration": {
       "nse": 0.8749374610591575,
       "r2": 0.8862653388311295,
       "rmse": 0.01007769156533378,
-      "pbias": 1.1523023968586781e-15
+      "pbias": -1.1523023968586781e-15
     },
     "validation": {
       "nse": 0.4481062274221109,
       "r2": 0.6298142149584808,
       "rmse": 0.016402286027429266,
-      "pbias": -14.714820486427014
+      "pbias": 14.714820486427014
     },
     "all": {
       "nse": 0.8059060567294055,
       "r2": 0.8316283209316219,
       "rmse": 0.012330118456445953,
-      "pbias": -3.6849004952464215
+      "pbias": 3.6849004952464215
     }
   }
 }

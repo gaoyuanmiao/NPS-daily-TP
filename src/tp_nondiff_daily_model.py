@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from scipy.optimize import differential_evolution
+from scipy.optimize import differential_evolution, minimize
 
 from .data_loader import load_tp_dataset
 from .metrics import metrics_by_period
@@ -17,13 +17,31 @@ def _sigmoid(x: np.ndarray | float) -> np.ndarray | float:
 
 def simulate_nondiff(params: np.ndarray, df: pd.DataFrame, crop_total: float, imp_total: float) -> tuple[np.ndarray, np.ndarray]:
     (
-        b1, b2, b3, b4,
-        c1, c2, c3,
-        g0, g1, g2, g3,
-        h0, h1, h2,
-        t0, t1, t2,
-        u0, u1, u2,
-        kc, ki, ec, ei, mem,
+        b1,
+        b2,
+        b3,
+        b4,
+        c1,
+        c2,
+        c3,
+        g0,
+        g1,
+        g2,
+        g3,
+        h0,
+        h1,
+        h2,
+        t0,
+        t1,
+        t2,
+        u0,
+        u1,
+        u2,
+        kc,
+        ki,
+        ec,
+        ei,
+        mem,
     ) = params
 
     runoff = df["runoff_n"].to_numpy(dtype=float)
@@ -68,43 +86,57 @@ def simulate_nondiff(params: np.ndarray, df: pd.DataFrame, crop_total: float, im
     return sim, raw
 
 
+def _objective(params: np.ndarray, df: pd.DataFrame, obs: np.ndarray, train_mask: np.ndarray, crop_total: float, imp_total: float) -> float:
+    sim, _ = simulate_nondiff(params, df, crop_total, imp_total)
+    sim_train = sim[train_mask]
+    obs_train = obs[train_mask]
+    mse = np.mean((sim_train - obs_train) ** 2)
+    den = np.sum((obs_train - np.mean(obs_train)) ** 2) + 1e-8
+    nse_penalty = np.sum((sim_train - obs_train) ** 2) / den
+    log_mse = np.mean((np.log1p(np.clip(sim_train, 0.0, None)) - np.log1p(np.clip(obs_train, 0.0, None))) ** 2)
+    diff_loss = np.mean((np.diff(sim_train) - np.diff(obs_train)) ** 2)
+    peak_thr = np.quantile(obs_train, 0.9)
+    peak_mask = obs_train >= peak_thr
+    peak_loss = float(np.mean((sim_train[peak_mask] - obs_train[peak_mask]) ** 2)) if np.any(peak_mask) else 0.0
+    bias_penalty = abs(np.mean(sim_train - obs_train))
+    volume_penalty = abs(np.sum(sim_train) - np.sum(obs_train)) / max(abs(np.sum(obs_train)), 1e-8)
+    return float(
+        0.34 * nse_penalty
+        + 0.16 * mse
+        + 0.12 * log_mse
+        + 0.12 * diff_loss
+        + 0.12 * peak_loss
+        + 0.07 * bias_penalty
+        + 0.07 * volume_penalty
+    )
+
+
 def train_nondiff_model(output_prediction_csv: Path, output_metrics_json: Path, seed: int = 2028) -> tuple[pd.DataFrame, dict[str, dict[str, float]]]:
     dataset = load_tp_dataset()
     df = dataset.frame.copy()
     obs = df["TP"].to_numpy(dtype=float)
     train_mask = (df["period"] == "Calibration").to_numpy()
-    val_mask = ~train_mask
 
-    bounds = [
-        (-4.0, 4.0), (-4.0, 4.0), (-4.0, 4.0), (-4.0, 4.0),
-        (-4.0, 4.0), (-4.0, 4.0), (-4.0, 4.0),
-        (-4.0, 4.0), (-4.0, 4.0), (-4.0, 4.0), (-4.0, 4.0),
-        (-4.0, 4.0), (-4.0, 4.0), (-4.0, 4.0),
-        (-4.0, 4.0), (-4.0, 4.0), (-4.0, 4.0),
-        (-4.0, 4.0), (-4.0, 4.0), (-4.0, 4.0),
-        (-4.0, 4.0), (-4.0, 4.0), (-4.0, 4.0), (-4.0, 4.0), (-4.0, 4.0),
-    ]
+    bounds = [(-4.0, 4.0)] * 25
+    objective = lambda params: _objective(np.asarray(params, dtype=float), df, obs, train_mask, dataset.crop_total, dataset.impervious_total)
 
-    def objective(params: np.ndarray) -> float:
-        sim, _ = simulate_nondiff(params, df, dataset.crop_total, dataset.impervious_total)
-        train_err = np.mean((sim[train_mask] - obs[train_mask]) ** 2)
-        val_err = np.mean((sim[val_mask] - obs[val_mask]) ** 2)
-        obs_train = obs[train_mask]
-        den = np.sum((obs_train - np.mean(obs_train)) ** 2) + 1e-8
-        nse_pen = np.sum((sim[train_mask] - obs_train) ** 2) / den
-        return 0.55 * train_err + 0.25 * val_err + 0.20 * nse_pen
-
-    result = differential_evolution(
+    global_result = differential_evolution(
         objective,
         bounds=bounds,
         seed=seed,
-        maxiter=18,
-        popsize=8,
-        polish=True,
+        maxiter=22,
+        popsize=10,
+        polish=False,
         updating="deferred",
         workers=1,
     )
-    best_params = np.asarray(result.x, dtype=float)
+    local_result = minimize(
+        objective,
+        x0=np.asarray(global_result.x, dtype=float),
+        method="Powell",
+        options={"maxiter": 180, "xtol": 1e-3, "ftol": 1e-3},
+    )
+    best_params = np.asarray(local_result.x if local_result.success else global_result.x, dtype=float)
     sim, raw = simulate_nondiff(best_params, df, dataset.crop_total, dataset.impervious_total)
     metrics = metrics_by_period(obs, sim, df["period"].to_numpy())
 
@@ -121,8 +153,21 @@ def train_nondiff_model(output_prediction_csv: Path, output_metrics_json: Path, 
     output_metrics_json.parent.mkdir(parents=True, exist_ok=True)
     pred_df.to_csv(output_prediction_csv, index=False)
     output_metrics_json.write_text(
-        json.dumps({"metrics": metrics, "objective": float(result.fun), "nit": int(result.nit)}, ensure_ascii=False, indent=2),
+        json.dumps(
+            {
+                "metrics": metrics,
+                "objective": float(objective(best_params)),
+                "differential_evolution": {"fun": float(global_result.fun), "nit": int(global_result.nit)},
+                "powell_refine": {"success": bool(local_result.success), "fun": float(local_result.fun)},
+                "training": {
+                    "calibration_only_objective": True,
+                    "validation_used_for_training": False,
+                    "validation_used_for_parameter_selection": False,
+                },
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
         encoding="utf-8",
     )
     return pred_df, metrics
-
